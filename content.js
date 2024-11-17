@@ -118,12 +118,18 @@ function injectFolderUploadButton() {
                         combinedContent += `\n[Folder]: ${folderPath || '(root)'}\n`;
                     }
 
-                    const content = await file.text();
-                    combinedContent += `\n[File]: ${file.name}\n\n${content}\n`;
+                    combinedContent += `\n[File]: ${file.name}\n\n`;
+
+                    if (file.type.startsWith('image/')) {
+                        combinedContent += '<image_content>\n';
+                    } else {
+                        const content = await file.text();
+                        combinedContent += `${content}\n`;
+                    }
                 }
 
                 const combinedFile = new File([combinedContent.trim()], `${rootFolderName}_combined.txt`, { type: 'text/plain' });
-                
+
                 const dataTransfer = new DataTransfer();
                 dataTransfer.items.add(combinedFile);
                 originalInput.files = dataTransfer.files;
