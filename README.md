@@ -64,7 +64,7 @@ Additionally, in the combined mode where there is more than 5 files, images are 
 # Installation 
 
 To install the extension to Chrome:
-* Checkout or download the git repository from the releases (link)[https://github.com/duck4i/ClaudeFolders/releases].
+* Checkout or download the git repository from the releases (link)[https://github.com/duck4i/folders-for-claude-ai/releases].
 * Navigate to `chrome://extensions/` URL.
 * Click `Load unpacked` and point to the downloaded location.
 
