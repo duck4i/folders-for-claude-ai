@@ -1,0 +1,16 @@
+{
+    "manifest_version": 3,
+    "name": "Claude Folder Upload",
+    "version": "0.1.0",
+    "description": "Enables folder upload functionality for Claude.ai",
+    "permissions": [
+      "activeTab",
+      "scripting"
+    ],
+    "content_scripts": [
+      {
+        "matches": ["https://claude.ai/*"],
+        "js": ["content.js"]
+      }
+    ]
+  }
