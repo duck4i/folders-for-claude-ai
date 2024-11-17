@@ -110,15 +110,13 @@ function injectFolderUploadButton() {
                     const relativePath = file.webkitRelativePath.slice(rootFolderName.length + 1);
                     const folderPath = relativePath.split('/').slice(0, -1).join('/');
 
+                    // Only add folder path if it has changed
                     if (folderPath !== currentPath) {
-                        if (currentPath !== '') {
-                            combinedContent += '\n';
-                        }
                         currentPath = folderPath;
-                        combinedContent += `\n[Folder]: ${folderPath || '(root)'}\n`;
                     }
 
-                    combinedContent += `\n[File]: ${file.name}\n\n`;
+                    // Format the file entry
+                    combinedContent += `[File]: ${currentPath ? `${currentPath}/` : ''}${file.name}\n`;
 
                     if (file.type.startsWith('image/')) {
                         combinedContent += '<image_content>\n';
