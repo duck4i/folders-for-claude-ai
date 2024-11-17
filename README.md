@@ -60,3 +60,10 @@ This is very useful for programming needs as it allows you to combine all your c
 To include some safety considerations all files that are starting with `.filename` are ignored (.env files for example) and not sent to Claude.
 
 Additionally, in the combined mode where there is more than 5 files, images are uploaded only as <image_content> excluding the file's actual content to keep the context length reasonable.
+
+# Installation 
+
+To install the extension to Chrome:
+* Checkout or download the git repository from the releases.
+* Navigate to `chrome://extensions/` URL.
+* Click `Load unpacked` and point to the downloaded location.
