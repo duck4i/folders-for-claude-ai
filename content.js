@@ -46,12 +46,18 @@ function injectFolderUploadButton() {
 
     const folderUploadButton = document.createElement('button');
     folderUploadButton.id = 'claude-folder-upload';
-    folderUploadButton.innerHTML = '📁';
+    folderUploadButton.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-folder-up"><path d="M20 20a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-7.9a2 2 0 0 1-1.69-.9L9.6 3.9A2 2 0 0 0 7.93 3H4a2 2 0 0 0-2 2v13a2 2 0 0 0 2 2Z"/><path d="M12 10v6"/><path d="m9 13 3-3 3 3"/></svg>';
     folderUploadButton.title = 'Upload Folder';
     folderUploadButton.setAttribute('aria-label', 'Upload folder');
 
+    // Copy classes and styles from the original upload button
     folderUploadButton.className = uploadButton.className;
-    folderUploadButton.style.marginLeft = '8px';
+    folderUploadButton.style.cssText = uploadButton.style.cssText;
+
+    // Add additional styles to match the original button
+    folderUploadButton.style.display = 'inline-flex';
+    folderUploadButton.style.alignItems = 'center';
+    folderUploadButton.style.justifyContent = 'center';
 
     const folderInput = document.createElement('input');
     folderInput.type = 'file';
@@ -63,12 +69,20 @@ function injectFolderUploadButton() {
         const files = Array.from(event.target.files);
         const acceptedTypes = getAcceptedFileTypes();
 
-        const allowedFiles = files.filter(file =>
-            acceptedTypes.some(type => {
+        let ignoredCount = 0;
+        const allowedFiles = files.filter(file => {
+            // Exclude files and folders starting with a dot, including .git
+            const pathParts = file.webkitRelativePath.split('/');
+            if (pathParts.some(part => part.startsWith('.'))) {
+                ignoredCount++;
+                return false;
+            }
+
+            return acceptedTypes.some(type => {
                 const extension = type.startsWith('.') ? type : `.${type}`;
                 return file.name.toLowerCase().endsWith(extension.toLowerCase());
-            })
-        );
+            });
+        });
 
         if (allowedFiles.length === 0) {
             showToast('No compatible files found in the selected folder');
@@ -96,7 +110,11 @@ function injectFolderUploadButton() {
             originalInput.dispatchEvent(new Event('change', { bubbles: true }));
 
             const fileCount = allowedFiles.length;
-            showToast(`Successfully added ${fileCount} file${fileCount === 1 ? '' : 's'} from folder`);
+            let message = `Successfully added ${fileCount} file${fileCount === 1 ? '' : 's'} from folder`;
+            if (ignoredCount > 0) {
+                message += `. ${ignoredCount} file${ignoredCount === 1 ? '' : 's'} starting with . were ignored for safety.`;
+            }
+            showToast(message);
         } catch (error) {
             console.error('Error processing files:', error);
             showToast('An error occurred while processing the files. Please try again with fewer files.');
